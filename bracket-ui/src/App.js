@@ -6,7 +6,7 @@ export default function BracketApp() {
 
   const generateBracket = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:8000/bracket");
+      const response = await axios.get("https://bracket-simulator.onrender.com");
       setBracket(response.data);
     } catch (error) {
       console.error("Error fetching bracket:", error);
