@@ -7,11 +7,16 @@ app = FastAPI()
 # Enable CORS for frontend access
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  
+    allow_origins=["*"],  # Allow all origins for now (change later for security)
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.get("/")
+def read_root():
+    """Root endpoint to verify the API is running."""
+    return {"message": "Bracket Simulator API is running!"}
 
 def game_winner(seedA, seedB):
     """Simulates a game between two seeds."""
