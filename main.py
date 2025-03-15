@@ -7,16 +7,11 @@ app = FastAPI()
 # Enable CORS for frontend access
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allow all origins for now (change later for security)
+    allow_origins=["*"],  # Allows all origins
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-@app.get("/")
-def read_root():
-    """Root endpoint to verify the API is running."""
-    return {"message": "Bracket Simulator API is running!"}
 
 def game_winner(seedA, seedB):
     """Simulates a game between two seeds."""
@@ -31,7 +26,7 @@ def game_winner(seedA, seedB):
 def simulate_region(region_name):
     """Simulates one region of the bracket and returns all rounds."""
     field = [1, 16, 8, 9, 5, 12, 4, 13, 6, 11, 3, 14, 7, 10, 2, 15]
-    
+
     round_of_32 = [game_winner(field[i], field[i+1]) for i in range(0, 16, 2)]
     sweet_16 = [game_winner(round_of_32[i], round_of_32[i+1]) for i in range(0, 8, 2)]
     elite_8 = [game_winner(sweet_16[i], sweet_16[i+1]) for i in range(0, 4, 2)]
@@ -45,6 +40,11 @@ def simulate_region(region_name):
         "regional_champ": regional_champ
     }
 
+@app.get("/")
+def root():
+    """Root endpoint for testing."""
+    return {"message": "Bracket Simulator API is live!"}
+
 @app.get("/bracket")
 def generate_bracket():
     """Simulates an entire bracket and returns all rounds."""
@@ -54,25 +54,15 @@ def generate_bracket():
     top_right = simulate_region("Top Right")
     bottom_right = simulate_region("Bottom Right")
 
-    # Final Four - Keeping region names
     left_champ = game_winner(top_left["regional_champ"], bottom_left["regional_champ"])
-    left_champ_region = top_left["region"] if left_champ == top_left["regional_champ"] else bottom_left["region"]
-
     right_champ = game_winner(top_right["regional_champ"], bottom_right["regional_champ"])
-    right_champ_region = top_right["region"] if right_champ == top_right["regional_champ"] else bottom_right["region"]
-
-    # National Champion - Keeping region name
     national_champ = game_winner(left_champ, right_champ)
-    national_champ_region = left_champ_region if national_champ == left_champ else right_champ_region
 
     return {
         "top_left": top_left,
         "bottom_left": bottom_left,
         "top_right": top_right,
         "bottom_right": bottom_right,
-        "final_four": {
-            "left": {"region": left_champ_region, "seed": left_champ},
-            "right": {"region": right_champ_region, "seed": right_champ}
-        },
-        "national_champion": {"region": national_champ_region, "seed": national_champ}
+        "final_four": {"left": left_champ, "right": right_champ},
+        "national_champion": national_champ
     }
