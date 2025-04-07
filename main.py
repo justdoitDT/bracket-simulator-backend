@@ -47,22 +47,41 @@ def root():
 
 @app.get("/bracket")
 def generate_bracket():
-    """Simulates an entire bracket and returns all rounds."""
-    
+    # Simulate regions
     top_left = simulate_region("Top Left")
     bottom_left = simulate_region("Bottom Left")
     top_right = simulate_region("Top Right")
     bottom_right = simulate_region("Bottom Right")
 
-    left_champ = game_winner(top_left["regional_champ"], bottom_left["regional_champ"])
-    right_champ = game_winner(top_right["regional_champ"], bottom_right["regional_champ"])
-    national_champ = game_winner(left_champ, right_champ)
+    # Get regional champs
+    left_champ_seed = game_winner(top_left["regional_champ"], bottom_left["regional_champ"])
+    right_champ_seed = game_winner(top_right["regional_champ"], bottom_right["regional_champ"])
 
+    # Helper to find the region based on seed
+    def find_team(seed, regions):
+        for region in regions:
+            if region["regional_champ"] == seed:
+                return {"region": region["region"], "seed": seed}
+        return {"region": "Unknown", "seed": seed}
+
+    # Build final four teams
+    left_team = find_team(left_champ_seed, [top_left, bottom_left])
+    right_team = find_team(right_champ_seed, [top_right, bottom_right])
+
+    # Determine national champ seed and region
+    national_champ_seed = game_winner(left_champ_seed, right_champ_seed)
+    national_champ_team = find_team(national_champ_seed, [top_left, bottom_left, top_right, bottom_right])
+
+    # Return full bracket
     return {
         "top_left": top_left,
         "bottom_left": bottom_left,
         "top_right": top_right,
         "bottom_right": bottom_right,
-        "final_four": {"left": left_champ, "right": right_champ},
-        "national_champion": national_champ
+        "final_four": {
+            "left": left_team,
+            "right": right_team
+        },
+        "national_champion": national_champ_team
     }
+
