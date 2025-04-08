@@ -11,7 +11,7 @@ export default function BracketApp() {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get(`https://bracket-simulator.onrender.com/bracket?madness=${madnessLevel}`);
+      const response = await axios.get(`https://bracket-simulator.onrender.com/bracket?madness_level=${madnessLevel}`);
       setBracket(response.data);
     } catch (err) {
       console.error(err);
