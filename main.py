@@ -19,24 +19,25 @@ app.add_middleware(
 
 def win_probability(seedA, seedB, madness_level):
     """
-    Smoothly blends a chalky base probability with chaos (50/50),
-    based on madness_level (0 = chalk, 10 = madness).
+    Blends chalky base probability with chaos (50/50),
+    based on madness_level (0 = chalk, 10 = full madness).
     """
-    chaos = (madness_level / 10) ** 0.8
+    # A gentler curve for chaos (slower ramp-up)
+    chaos = (madness_level / 10) ** 2  
 
-    # Handle 1v16 and 2v15 separately, but blend toward 0.5 at high madness
+    # Special cases for extreme seed matchups
     if (seedA, seedB) in [(1, 16), (16, 1)]:
-        base_prob = 0.993
+        base_prob = 0.995
         return base_prob * (1 - chaos) + 0.5 * chaos
     elif (seedA, seedB) in [(2, 15), (15, 2)]:
-        base_prob = 0.938
+        base_prob = 0.94
         return base_prob * (1 - chaos) + 0.5 * chaos
 
-    # Use your original "chalky" odds
-    chalky_odds = 0.91 * max(seedA, seedB) / (seedA + seedB)
+    # Adjusted base odds formula to skew more chalky
+    chalky_odds = 0.95 * max(seedA, seedB) / (seedA + seedB)
 
-    # Blend it with 50/50 based on chaos
     return chalky_odds * (1 - chaos) + 0.5 * chaos
+
 
 
 
