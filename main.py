@@ -18,11 +18,19 @@ app.add_middleware(
 
 
 def upset_probability(seedA, seedB, madness_level):
-    # Identify higher and lower seed
     high_seed = min(seedA, seedB)
     low_seed = max(seedA, seedB)
-    
-    return (high_seed ** ((low_seed - high_seed) ** (2.71828 ** (-.5117*(madness_level - 1))))) / (high_seed ** ((low_seed - high_seed) ** (2.71828 ** (-.5117*(madness_level - 1)))) + low_seed ** ((low_seed - high_seed) ** (2.71828 ** (-.5117*(madness_level - 1)))))
+    seed_diff = abs(seedA - seedB)
+
+    exponent = seed_diff ** (math.exp(-0.5117 * (madness_level - 1)))
+
+    numerator = high_seed ** exponent
+    denominator = high_seed ** exponent + low_seed ** exponent
+
+    prob = numerator / denominator
+
+    # Return the probability that seedA wins
+    return prob if seedA < seedB else 1 - prob
 
 
 def game_winner(seedA, seedB, madness_level):
