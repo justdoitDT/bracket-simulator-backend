@@ -19,16 +19,12 @@ app.add_middleware(
 
 def win_probability(seedA, seedB, madness_level):
     """
-    Returns the win probability for seedA over seedB based on madness level (0 = chalk, 10 = madness).
-    Uses nonlinear exponent scaling and special handling for 1v16, 2v15.
+    Smoothly blends a chalky base probability with chaos (50/50),
+    based on madness_level (0 = chalk, 10 = madness).
     """
-    chaos = madness_level / 10
+    chaos = (madness_level / 10) ** 1.25
 
-    # At full madness, return pure 50/50
-    if chaos >= 0.999:
-        return 0.5
-
-    # Special protection for 1 vs 16 and 2 vs 15, fades with madness
+    # Handle 1v16 and 2v15 separately, but blend toward 0.5 at high madness
     if (seedA, seedB) in [(1, 16), (16, 1)]:
         base_prob = 0.993
         return base_prob * (1 - chaos) + 0.5 * chaos
@@ -36,18 +32,18 @@ def win_probability(seedA, seedB, madness_level):
         base_prob = 0.938
         return base_prob * (1 - chaos) + 0.5 * chaos
 
-    # Use nonlinear exponent: exponential decay gives more variety across range
-    exponent = 2 ** (1 - chaos)  # e.g., 5 at chalk, ~1.0 at 0.7, ~0.5 at 0.9
+    # Use your original "chalky" odds
+    chalky_odds = 0.91 * max(seedA, seedB) / (seedA + seedB)
 
-    powerA = seedA ** exponent
-    powerB = seedB ** exponent
+    # Blend it with 50/50 based on chaos
+    return chalky_odds * (1 - chaos) + 0.5 * chaos
 
-    return powerB / (powerA + powerB)
 
 
 def game_winner(seedA, seedB, madness_level):
     prob = win_probability(seedA, seedB, madness_level)
     return seedA if random.random() < prob else seedB
+
 
 def simulate_region(region_name, madness_level):
     """Simulates one region of the bracket and returns all rounds."""
