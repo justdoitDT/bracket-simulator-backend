@@ -37,7 +37,7 @@ def win_probability(seedA, seedB, madness_level):
         return base_prob * (1 - chaos) + 0.5 * chaos
 
     # Use nonlinear exponent: exponential decay gives more variety across range
-    exponent = 5 ** (1 - chaos)  # e.g., 5 at chalk, ~1.0 at 0.7, ~0.5 at 0.9
+    exponent = 2 ** (1 - chaos)  # e.g., 5 at chalk, ~1.0 at 0.7, ~0.5 at 0.9
 
     powerA = seedA ** exponent
     powerB = seedB ** exponent
