@@ -27,34 +27,24 @@ export default function BracketApp() {
   
       {/* Madness Slider */}
       <div className="w-full max-w-md mt-6">
-      <label htmlFor="madness" className="block mb-2 font-semibold text-gray-700">
-        Madness Level: {madnessLevel}
-      </label>
-      <input
-        id="madness"
-        type="range"
-        min="0"
-        max="10"
-        value={madnessLevel}
-        onChange={(e) => setMadnessLevel(parseInt(e.target.value))}
-        className="w-full"
-      />
-      <div className="flex justify-between text-sm text-gray-500 mt-1">
-        <span>Chalk</span>
-        <span>Madness!</span>
+        <label htmlFor="madness" className="block mb-2 font-semibold text-gray-700">
+          Madness Level: {madnessLevel}
+        </label>
+        <div className="flex items-center space-x-4">
+          <span className="text-sm text-gray-600">Chalk</span>
+          <input
+            id="madness"
+            type="range"
+            min="0"
+            max="10"
+            value={madnessLevel}
+            onChange={(e) => setMadnessLevel(parseInt(e.target.value))}
+            className="flex-1"
+          />
+          <span className="text-sm text-red-600 font-semibold">Madness!</span>
+        </div>
       </div>
 
-        <input
-          id="madness"
-          type="range"
-          min="0"
-          max="10"
-          value={madnessLevel}
-          onChange={(e) => setMadnessLevel(parseInt(e.target.value))}
-          className="w-full"
-        />
-      </div>
-  
       {/* Generate Button */}
       <button 
         className="mt-4 px-6 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 disabled:opacity-50"

@@ -19,10 +19,13 @@ def win_probability(seedA, seedB, madness_level):
     Returns the win probability for seedA over seedB based on madness level (0 = chalk, 10 = madness).
     Accounts for special 1v16 and 2v15 matchups.
     """
-    chaos = madness_level / 10  # normalize 0–1
-    exponent = (1 - chaos) * 3.0 + chaos * 0.3
+    chaos = madness_level / 10
 
-    # Special early-round seed protection, fades out with chaos
+    # At full madness, return pure 50/50
+    if chaos >= 0.99:
+        return 0.5
+
+    # Special protection for round-of-64
     if (seedA, seedB) in [(1, 16), (16, 1)]:
         base_prob = 0.993
         return base_prob * (1 - chaos) + 0.5 * chaos
@@ -30,11 +33,13 @@ def win_probability(seedA, seedB, madness_level):
         base_prob = 0.938
         return base_prob * (1 - chaos) + 0.5 * chaos
 
-    # Regular matchups use power-based model
+    # Scale the exponent more sharply for better spread
+    exponent = (1 - chaos) * 4.5 + chaos * 0.2
+
     powerA = seedA ** exponent
     powerB = seedB ** exponent
-    probA = powerB / (powerA + powerB)  # seedA wins if random < probA
-    return probA
+
+    return powerB / (powerA + powerB)
 
 def game_winner(seedA, seedB, madness_level):
     prob = win_probability(seedA, seedB, madness_level)
