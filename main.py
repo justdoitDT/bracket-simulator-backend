@@ -22,7 +22,7 @@ def win_probability(seedA, seedB, madness_level):
     Smoothly blends a chalky base probability with chaos (50/50),
     based on madness_level (0 = chalk, 10 = madness).
     """
-    chaos = (madness_level / 10) ** 1.25
+    chaos = (madness_level / 10) ** 0.8
 
     # Handle 1v16 and 2v15 separately, but blend toward 0.5 at high madness
     if (seedA, seedB) in [(1, 16), (16, 1)]:
