@@ -29,8 +29,8 @@ def upset_probability(seedA, seedB, madness_level):
 
     prob = numerator / denominator
 
-    # Return the probability that seedA wins
-    return prob if seedA < seedB else 1 - prob
+    # Return the probability that the lower seed wins
+    return prob
 
 
 def game_winner(seedA, seedB, madness_level):
