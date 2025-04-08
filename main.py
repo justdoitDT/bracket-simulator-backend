@@ -17,36 +17,19 @@ app.add_middleware(
 )
 
 
-def win_probability(seedA, seedB, madness_level):
+def upset_probability(seedA, seedB, madness_level):
     # Identify higher and lower seed
     high_seed = min(seedA, seedB)
     low_seed = max(seedA, seedB)
-    seed_diff = low_seed - high_seed
     
-    # Scale madness level between 0 and 1
-    chaos = madness_level / 10
-    
-    # Base win chance function using a logistic curve
-    # When chaos = 0, probability → 1 for high seed
-    # When chaos = 1, probability → 0.5 for high seed
-    # The constant k adjusts how sharply seed difference matters
-    k = 0.5 + 2 * (1 - chaos)  # stronger curve for lower madness
-    prob = 1 / (1 + math.exp(-k * seed_diff))
-    
-    # Flip because logistic normally favors increasing input (we want high seed to win)
-    prob = 1 - prob
-    
-    # Clamp between 0.5001 and 0.9999 to ensure higher seed always has edge
-    prob = max(0.5001, min(prob, 0.9999))
-    
-    return prob
+    return (high_seed ** ((low_seed - high_seed) ** (2.71828 ** (-.5117*(madness_level - 1))))) / (high_seed ** ((low_seed - high_seed) ** (2.71828 ** (-.5117*(madness_level - 1)))) + low_seed ** ((low_seed - high_seed) ** (2.71828 ** (-.5117*(madness_level - 1)))))
 
 
 def game_winner(seedA, seedB, madness_level):
     high_seed = min(seedA, seedB)
     low_seed = max(seedA, seedB)
-    prob = win_probability(seedA, seedB, madness_level)
-    return high_seed if random.random() < prob else low_seed
+    upset_prob = upset_probability(seedA, seedB, madness_level)
+    return low_seed if random.random() < upset_prob else high_seed
 
 
 def simulate_region(region_name, madness_level):
