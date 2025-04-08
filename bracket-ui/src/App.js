@@ -8,23 +8,28 @@ export default function BracketApp() {
   const [madnessLevel, setMadnessLevel] = useState(5); // default to midpoint
 
   const generateBracket = async () => {
-    setLoading(true);
+    // Clear any previous error
     setError(null);
+
+    // Immediately clear the current bracket
+    setBracket(null);
+    setLoading(true);
+
     try {
-      const response = await axios.get(`https://bracket-simulator.onrender.com/bracket?madness_level=${madnessLevel}`);
+      const response = await axios.get(`http://localhost:8000/bracket?madness_level=${madnessLevel}`);
       setBracket(response.data);
     } catch (err) {
-      console.error(err);
-      setError("Failed to fetch bracket.");
-    } finally {
-      setLoading(false);
+      console.error("Error fetching bracket:", err);
+      setError("Failed to generate bracket. Please try again.");
     }
+
+    setLoading(false);
   };
-  
+
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center p-6">
       <h1 className="text-3xl font-bold text-blue-600 mb-4">🏀 Bracket Randomizer 🏀</h1>
-  
+
       {/* Madness Slider */}
       <div className="w-full max-w-md mt-6">
         <label htmlFor="madness" className="block mb-2 font-semibold text-gray-700">
@@ -53,21 +58,21 @@ export default function BracketApp() {
       >
         Generate Bracket
       </button>
-  
+
       {/* Loading Indicator */}
       {loading && (
         <p className="mt-6 text-blue-600 font-semibold animate-pulse">
           Generating bracket...
         </p>
       )}
-  
+
       {/* Error Message */}
       {error && (
         <p className="mt-6 text-red-600 font-semibold">{error}</p>
       )}
-  
+
       {/* Bracket Output */}
-      {bracket && (
+      {!loading && bracket && (
         <div className="mt-6 w-full max-w-3xl bg-white shadow-lg rounded-lg p-6">
           {["top_left", "bottom_left", "top_right", "bottom_right"].map(region => (
             <div key={region} className="mb-6">
@@ -82,13 +87,13 @@ export default function BracketApp() {
               </table>
             </div>
           ))}
-  
+
           <div className="mt-4 border-t pt-4">
             <h2 className="text-xl font-bold text-gray-900">🏆 Final Four 🏆</h2>
             <p className="text-lg mt-2">Left: <span className="font-semibold">{bracket.final_four.left.region} ({bracket.final_four.left.seed})</span></p>
             <p className="text-lg">Right: <span className="font-semibold">{bracket.final_four.right.region} ({bracket.final_four.right.seed})</span></p>
           </div>
-  
+
           <div className="mt-4 bg-yellow-100 p-4 rounded-lg shadow-md">
             <h2 className="text-2xl font-bold text-yellow-700">🏅 National Champion 🏅</h2>
             <p className="text-xl mt-2 font-semibold">{bracket.national_champion.region} ({bracket.national_champion.seed})</p>
@@ -97,5 +102,4 @@ export default function BracketApp() {
       )}
     </div>
   );
-  
 }

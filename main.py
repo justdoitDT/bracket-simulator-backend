@@ -22,10 +22,10 @@ def upset_probability(seedA, seedB, madness_level):
     low_seed = max(seedA, seedB)
     seed_diff = abs(seedA - seedB)
 
-    exponent = seed_diff ** (math.exp(-0.5117 * (madness_level - 1)))
+    exponent = math.exp(-0.5117 * (madness_level - 1))
 
-    numerator = high_seed ** exponent
-    denominator = high_seed ** exponent + low_seed ** exponent
+    numerator = (high_seed ** seed_diff) ** exponent
+    denominator = (high_seed ** seed_diff) ** exponent + (low_seed ** seed_diff) ** exponent
 
     prob = numerator / denominator
 
