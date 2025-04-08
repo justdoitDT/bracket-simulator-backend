@@ -7,24 +7,26 @@ export default function BracketApp() {
   const [error, setError] = useState(null);
   const [madnessLevel, setMadnessLevel] = useState(5); // default to midpoint
 
-  const generateBracket = async () => {
-    // Clear any previous error
-    setError(null);
-
-    // Immediately clear the current bracket
+  const generateBracket = () => {
+    // Step 1: Clear bracket and show spinner immediately
     setBracket(null);
     setLoading(true);
-
-    try {
-      const response = await axios.get(`http://localhost:8000/bracket?madness_level=${madnessLevel}`);
-      setBracket(response.data);
-    } catch (err) {
-      console.error("Error fetching bracket:", err);
-      setError("Failed to generate bracket. Please try again.");
-    }
-
-    setLoading(false);
+    setError(null);
+  
+    // Step 2: Use microdelay to allow UI to update before fetch
+    setTimeout(async () => {
+      try {
+        const response = await axios.get(`http://localhost:8000/bracket?madness_level=${madnessLevel}`);
+        setBracket(response.data);
+      } catch (err) {
+        console.error("Error fetching bracket:", err);
+        setError("Failed to generate bracket. Please try again.");
+      }
+  
+      setLoading(false);
+    }, 0);
   };
+  
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center p-6">
