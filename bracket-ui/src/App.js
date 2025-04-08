@@ -27,9 +27,23 @@ export default function BracketApp() {
   
       {/* Madness Slider */}
       <div className="w-full max-w-md mt-6">
-        <label htmlFor="madness" className="block mb-2 font-semibold text-gray-700">
-          Madness Level: {madnessLevel} ({madnessLevel === 0 ? "Chalk" : madnessLevel === 10 ? "Madness" : ""})
-        </label>
+      <label htmlFor="madness" className="block mb-2 font-semibold text-gray-700">
+        Madness Level: {madnessLevel}
+      </label>
+      <input
+        id="madness"
+        type="range"
+        min="0"
+        max="10"
+        value={madnessLevel}
+        onChange={(e) => setMadnessLevel(parseInt(e.target.value))}
+        className="w-full"
+      />
+      <div className="flex justify-between text-sm text-gray-500 mt-1">
+        <span>Chalk</span>
+        <span>Madness!</span>
+      </div>
+
         <input
           id="madness"
           type="range"
