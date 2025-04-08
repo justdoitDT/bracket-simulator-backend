@@ -18,32 +18,35 @@ app.add_middleware(
 
 
 def win_probability(seedA, seedB, madness_level):
-    """
-    Blends chalky base probability with chaos (50/50),
-    based on madness_level (0 = chalk, 10 = full madness).
-    """
-    # A gentler curve for chaos (slower ramp-up)
-    chaos = (madness_level / 10) ** 2  
-
-    # Special cases for extreme seed matchups
-    if (seedA, seedB) in [(1, 16), (16, 1)]:
-        base_prob = 0.995
-        return base_prob * (1 - chaos) + 0.5 * chaos
-    elif (seedA, seedB) in [(2, 15), (15, 2)]:
-        base_prob = 0.94
-        return base_prob * (1 - chaos) + 0.5 * chaos
-
-    # Adjusted base odds formula to skew more chalky
-    chalky_odds = 0.95 * max(seedA, seedB) / (seedA + seedB)
-
-    return chalky_odds * (1 - chaos) + 0.5 * chaos
-
-
+    # Identify higher and lower seed
+    high_seed = min(seedA, seedB)
+    low_seed = max(seedA, seedB)
+    seed_diff = low_seed - high_seed
+    
+    # Scale madness level between 0 and 1
+    chaos = madness_level / 10
+    
+    # Base win chance function using a logistic curve
+    # When chaos = 0, probability → 1 for high seed
+    # When chaos = 1, probability → 0.5 for high seed
+    # The constant k adjusts how sharply seed difference matters
+    k = 0.5 + 2 * (1 - chaos)  # stronger curve for lower madness
+    prob = 1 / (1 + math.exp(-k * seed_diff))
+    
+    # Flip because logistic normally favors increasing input (we want high seed to win)
+    prob = 1 - prob
+    
+    # Clamp between 0.5001 and 0.9999 to ensure higher seed always has edge
+    prob = max(0.5001, min(prob, 0.9999))
+    
+    return prob
 
 
 def game_winner(seedA, seedB, madness_level):
+    high_seed = min(seedA, seedB)
+    low_seed = max(seedA, seedB)
     prob = win_probability(seedA, seedB, madness_level)
-    return seedA if random.random() < prob else seedB
+    return high_seed if random.random() < prob else low_seed
 
 
 def simulate_region(region_name, madness_level):
