@@ -2,6 +2,8 @@ from fastapi import FastAPI
 from fastapi import Query
 from fastapi.middleware.cors import CORSMiddleware
 import random
+import math
+
 
 app = FastAPI()
 
@@ -14,18 +16,19 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 def win_probability(seedA, seedB, madness_level):
     """
     Returns the win probability for seedA over seedB based on madness level (0 = chalk, 10 = madness).
-    Accounts for special 1v16 and 2v15 matchups.
+    Uses nonlinear exponent scaling and special handling for 1v16, 2v15.
     """
     chaos = madness_level / 10
 
     # At full madness, return pure 50/50
-    if chaos >= 0.99:
+    if chaos >= 0.999:
         return 0.5
 
-    # Special protection for round-of-64
+    # Special protection for 1 vs 16 and 2 vs 15, fades with madness
     if (seedA, seedB) in [(1, 16), (16, 1)]:
         base_prob = 0.993
         return base_prob * (1 - chaos) + 0.5 * chaos
@@ -33,13 +36,14 @@ def win_probability(seedA, seedB, madness_level):
         base_prob = 0.938
         return base_prob * (1 - chaos) + 0.5 * chaos
 
-    # Scale the exponent more sharply for better spread
-    exponent = (1 - chaos) * 4.5 + chaos * 0.2
+    # Use nonlinear exponent: exponential decay gives more variety across range
+    exponent = 5 ** (1 - chaos)  # e.g., 5 at chalk, ~1.0 at 0.7, ~0.5 at 0.9
 
     powerA = seedA ** exponent
     powerB = seedB ** exponent
 
     return powerB / (powerA + powerB)
+
 
 def game_winner(seedA, seedB, madness_level):
     prob = win_probability(seedA, seedB, madness_level)
