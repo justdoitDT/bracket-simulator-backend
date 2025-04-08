@@ -16,7 +16,7 @@ export default function BracketApp() {
     // Step 2: Use microdelay to allow UI to update before fetch
     setTimeout(async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/bracket?madness_level=${madnessLevel}`);
+        const response = await axios.get(`http://localhost:8000/bracket?madness_level=${madness}`);
         setBracket(response.data);
       } catch (err) {
         console.error("Error fetching bracket:", err);
