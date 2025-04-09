@@ -28,8 +28,9 @@ export default function BracketApp() {
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center p-6">
       <h1 className="text-3xl font-bold text-blue-600">🏀 Bracket Randomizer 🏀</h1>
-      <p className="text-[10px] text-gray-500 mt-1 mb-6">Created by justdoitDT</p>
-
+      <p className="text-[6px] text-gray-500 mt-1 mb-6">Created by justdoitDT</p>
+      <br></br>
+      <br></br>
       <div className="w-full max-w-md mt-6">
         <label htmlFor="madness" className="block mb-2 font-semibold text-gray-700">
           Madness Level: {madnessLevel}
