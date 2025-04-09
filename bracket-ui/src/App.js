@@ -76,7 +76,7 @@ export default function BracketApp() {
 
       {/* Bracket Output */}
       {!loading && bracket && (
-        <div className="mt-6 w-full max-w-3xl bg-white shadow-lg rounded-lg p-6">
+        <div className="mt-6 w-full max-w-3xl bg-white shadow-lg rounded-lg p-6 pb-24">
           {["top_left", "bottom_left", "top_right", "bottom_right"].map(region => (
             <div key={region} className="mb-6">
               <h2 className="text-xl font-semibold text-gray-800 border-b pb-2">{bracket[region].region} Region</h2>
