@@ -30,7 +30,8 @@ export default function BracketApp() {
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center p-6">
-      <h1 className="text-3xl font-bold text-blue-600 mb-4">🏀 Bracket Randomizer 🏀</h1>
+      <h1 className="text-3xl font-bold text-blue-600">🏀 Bracket Randomizer 🏀</h1>
+      <p className="text-[10px] text-gray-500 mt-1 mb-6">Created by justdoitDT</p>
 
       {/* Madness Slider */}
       <div className="w-full max-w-md mt-6">
