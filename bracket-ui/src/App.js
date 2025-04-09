@@ -5,7 +5,7 @@ export default function BracketApp() {
   const [bracket, setBracket] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [madnessLevel, setMadnessLevel] = useState(5); // default to midpoint
+  const [madnessLevel, setMadnessLevel] = useState(5);
 
   const generateBracket = () => {
     setBracket(null);
@@ -30,7 +30,6 @@ export default function BracketApp() {
       <h1 className="text-3xl font-bold text-blue-600">🏀 Bracket Randomizer 🏀</h1>
       <p className="text-[10px] text-gray-500 mt-1 mb-6">Created by justdoitDT</p>
 
-      {/* Madness Slider */}
       <div className="w-full max-w-md mt-6">
         <label htmlFor="madness" className="block mb-2 font-semibold text-gray-700">
           Madness Level: {madnessLevel}
@@ -50,7 +49,6 @@ export default function BracketApp() {
         </div>
       </div>
 
-      {/* Generate Button */}
       <button 
         className="mt-4 px-6 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 disabled:opacity-50"
         onClick={generateBracket}
@@ -59,22 +57,19 @@ export default function BracketApp() {
         Generate Bracket
       </button>
 
-      {/* Loading Indicator */}
       {loading && (
         <p className="mt-6 text-blue-600 font-semibold animate-pulse">
           Generating bracket...
         </p>
       )}
 
-      {/* Error Message */}
       {error && (
         <p className="mt-6 text-red-600 font-semibold">{error}</p>
       )}
 
-      {/* Bracket Output */}
       {!loading && bracket && (
         <>
-          <div className="mt-6 w-full max-w-3xl bg-white shadow-lg rounded-lg p-6 pb-24">
+          <div className="mt-6 w-full max-w-3xl bg-white shadow-lg rounded-lg p-6">
             {["top_left", "bottom_left", "top_right", "bottom_right"].map(region => (
               <div key={region} className="mb-6">
                 <h2 className="text-xl font-semibold text-gray-800 border-b pb-2">{bracket[region].region} Region</h2>
@@ -101,8 +96,10 @@ export default function BracketApp() {
             </div>
           </div>
 
-          {/* Spacer to prevent mobile overlap */}
-          <div className="h-32 sm:h-24"></div>
+          {/* Footer space and credit */}
+          <div className="mt-32 text-[10px] text-gray-400 text-center">
+            Created by justdoitDT
+          </div>
         </>
       )}
     </div>
