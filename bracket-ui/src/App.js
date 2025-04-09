@@ -98,6 +98,9 @@ export default function BracketApp() {
 
           {/* Footer space and credit */}
           <div className="mt-32 text-[10px] text-gray-400 text-center">
+            <br></br>
+            <br></br>
+            <br></br>
             Created by justdoitDT
           </div>
         </>
